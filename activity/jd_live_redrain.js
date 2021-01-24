@@ -1,32 +1,42 @@
 /*
-京东赚赚
-可以做随机互助
-活动入口：京东赚赚小程序
-长期活动，每日收益2毛左右，多号互助会较多
-已支持IOS双京东账号,Node.js支持N个京东账号
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+直播红包雨
+每天0,9,11,13,15,17,19,20,21,23可领，每日上限未知
+活动时间：2020-12-14 到 2020-12-31
+更新地址：https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_live_redrain.js
+已支持IOS双京东账号, Node.js支持N个京东账号
+脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
-# 京东赚赚
-10 0 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdzz.js, tag=京东赚赚, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdzz.png, enabled=true
+#直播红包雨
+0 0,9,11,13,15,17,19,20,21,23 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_live_redrain.js, tag=直播红包雨, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "10 0 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdzz.js,tag=京东赚赚
+cron "0 0,9,11,13,15,17,19,20,21,23 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_live_redrain.js, tag=直播红包雨
 
 ===============Surge=================
-京东赚赚 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdzz.js
+直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,23 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_live_redrain.js
 
 ============小火箭=========
-京东赚赚 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdzz.js, cronexpr="10 0 * * *", timeout=3600, enable=true
+直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_live_redrain.js, cronexpr="0 0,9,11,13,15,17,19,20,21,23 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东赚赚');
+const $ = new Env('直播红包雨');
+let ids = {
+  '0': 'RRA3S6TRRbnNNuGN43oHMA5okbcXmRY',
+  '9': 'RRA3vyGH4MRwCJELDwV7p24mNAByiSk',
+  '11': 'RRAnabmRSnpzSSZicXUhSFGBvFXs5c',
+  '13': 'RRA4RhWMc159kA62qLbaEa88evE7owb',
+  '15': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN',
+  '17': 'RRA2nFXT2oSQM3KaYX9uhBC1hBijDey',
+  '19': 'RRA3SQpuSAAJq1ckoPr4TXaxwbLG73k',
+  '20': 'RRA2cHV3KXqvHAZGboTTryr8JMYZd5j',
+  '21': 'RRA3SPs4XrDEXXwQjEFGrBLtMpjtkMV',
+  '23': 'RRA3dFHoZXGThSnctvtAf69dmVyEDfm',
+}
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let helpAuthor=false; // 帮助作者
-const randomCount = 0;
-let jdNotify = true; // 是否关闭通知，false打开通知推送，true关闭通知推送
+let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
@@ -35,6 +45,24 @@ if ($.isNode()) {
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
   };
+  process.env.TZ = "Asia/Shanghai";
+  Date.prototype.TimeZone = new Map([
+    ['Asia/Shanghai',+8],
+  ])
+  Date.prototype.zoneDate = function(){
+    if(process.env.TZ === undefined){
+      return new Date();
+    }else{
+      for (let item of this.TimeZone.entries()) {
+        if(item[0] === process.env.TZ){
+          let d = new Date();
+          d.setHours(d.getHours()+item[1]);
+          return d;
+        }
+      }
+      return new Date();
+    }
+  }
 } else {
   let cookiesData = $.getdata('CookiesJD') || "[]";
   cookiesData = jsonParse(cookiesData);
@@ -44,19 +72,29 @@ if ($.isNode()) {
   cookiesArr.reverse();
   cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
 }
-const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const inviteCodes = [
-  `ATGEC3-fsrn13aiaEqiM@AUWE5maSSnzFeDmH4iH0elA`,
-  `ATGEC3-fsrn13aiaEqiM@AUWE5maSSnzFeDmH4iH0elA`
-]
+const JD_API_HOST = 'https://api.m.jd.com/api';
 !(async () => {
-  $.tuanList = []
-  await requireConfig();
-  if (helpAuthor) await getAuthorShareCode('https://github.com/952714408/updateTeam/raw/master/jd_zz.json');
-  if (helpAuthor) await getAuthorShareCode('https://gitee.com/lxk0301/updateTeam/raw/master/jd_zz.json');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
+  }
+  $.log(`=====远程红包雨信息=====`)
+  await getRedRain();
+	if(!$.activityId) return
+  let nowTs = new Date().getTime()
+  if (!($.st <= nowTs && nowTs < $.ed)) {
+    $.log(`远程红包雨配置获取错误，从本地读取配置`)
+    $.log(`\n`)
+    let hour = (new Date().getUTCHours() + 8) %24
+    if (ids[hour]){
+      $.activityId = ids[hour]
+      $.log(`本地红包雨配置获取成功`)
+    } else{
+      $.log(`无法从本地读取配置，请检查运行时间`)
+      return
+    }
+  } else{
+    $.log(`远程红包雨配置获取成功`)
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -65,7 +103,7 @@ const inviteCodes = [
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      message = '';
+      message = `【${new Date().getUTCHours()+8}点${$.name}】`
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
@@ -76,18 +114,8 @@ const inviteCodes = [
         }
         continue
       }
-      await shareCodesFormat()
-      await jdWish()
-    }
-  }
-  for (let i = 0; i < cookiesArr.length; i++) {
-    $.canHelp = true
-    if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      for (let j = 0; j < $.tuanList.length; ++j) {
-        await helpFriendTuan($.tuanList[j])
-        if(!$.canHelp) break
-      }
+      await receiveRedRain();
+      await showMsg();
     }
   }
 })()
@@ -98,57 +126,34 @@ const inviteCodes = [
     $.done();
   })
 
-async function jdWish() {
-  $.bean = 0
-  $.tuan = null
-  $.hasOpen = false
-  await getUserTuanInfo()
-  if (!$.tuan) {
-    await openTuan()
-    if ($.hasOpen) await getUserTuanInfo()
+async function showMsg() {
+  if ($.isNode() && !jdNotify) {
+    await notify.sendNotify(`【京东账号${$.index}】${$.nickName}`, message)
   }
-  if ($.tuan) $.tuanList.push($.tuan)
-
-  await helpFriends()
-  await getUserInfo()
-  await getTaskList()
-  $.nowBean = parseInt($.totalBeanNum)
-  $.nowNum = parseInt($.totalNum)
-  for (let i = 0; i < $.taskList.length; ++i) {
-    let task = $.taskList[i]
-    if (task['taskId'] === 1 && task['status'] !== 2) {
-      console.log(`去做任务：${task.taskName}`)
-      await doTask({"taskId": task['taskId']})
-    } else if (task['taskId'] !== 3 && task['status'] !== 2) {
-      console.log(`去做任务：${task.taskName}`)
-      await doTask({"taskId": task['taskId']})
-    }
-  }
-  await getTaskList();
-  await showMsg();
-}
-
-function showMsg() {
-  return new Promise(async resolve => {
-    message += `本次获得${parseInt($.totalBeanNum) - $.nowBean}京豆，${parseInt($.totalNum) - $.nowNum}金币\n`
-    message += `累计获得${$.totalBeanNum}京豆，${$.totalNum}金币\n`
-    $.msg($.name, '', `京东账号${$.index} ${$.nickName}\n${message}`);
-    // 云端大于10元无门槛红包时进行通知推送
-    if ($.isNode() && $.totalScore >= 10000) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `京东账号${$.index} ${$.nickName}\n当前金币：${$.totalScore}个\n可兑换无门槛红包：${parseInt($.totalNum) / 1000}元\n`,)
-    resolve();
+  return new Promise(resolve => {
+    $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
+    resolve()
   })
 }
-function getAuthorShareCode(url) {
+
+function getRedRain() {
   return new Promise(resolve => {
-    $.get({url: `${url}?${new Date()}`,
-      headers:{
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }}, async (err, resp, data) => {
+    $.get({
+      url: "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now(),
+      }, (err, resp, data) => {
       try {
         if (err) {
+          console.log(`1111${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          $.tuanList = $.tuanList.concat(JSON.parse(data))
-          console.log(`作者助力码获取成功`)
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            $.activityId = data.activityId
+            $.st = data.startTime
+            $.ed = data.endTime
+            console.log(`下一场红包雨开始时间：${new Date(data.startTime)}`)
+            console.log(`下一场红包雨结束时间：${new Date(data.endTime)}`)
+          }
         }
       } catch (e) {
         $.logErr(e, resp)
@@ -158,9 +163,11 @@ function getAuthorShareCode(url) {
     })
   })
 }
-function helpFriendTuan(body) {
+
+function receiveRedRain() {
   return new Promise(resolve => {
-    $.get(taskTuanUrl("vvipclub_distributeBean_assist", body), async (err, resp, data) => {
+    const body = {"actId": $.activityId};
+    $.get(taskUrl('noahRedRainLottery', body), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -168,263 +175,32 @@ function helpFriendTuan(body) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.success) {
-              console.log('助力成功')
+            if (data.subCode === '0') {
+              console.log(`领取成功，获得${JSON.stringify(data.lotteryResult)}`)
+              // message+= `领取成功，获得${JSON.stringify(data.lotteryResult)}\n`
+              message += `领取成功，获得 ${(data.lotteryResult.jPeasList[0].quantity)} 京豆\n`
+
+            } else if (data.subCode === '8') {
+              console.log(`领取失败，已领过`)
+              message += `领取失败，已领过\n`;
             } else {
-              if (data.resultCode === '9200008') console.log('不能助力自己')
-              else if (data.resultCode === '9200011') console.log('已经助力过')
-              else if (data.resultCode === '2400205') console.log('团已满')
-              else if (data.resultCode === '2400203') {console.log('助力次数已耗尽');$.canHelp = false}
-              else console.log(`未知错误`)
+              console.log(`异常：${JSON.stringify(data)}`)
+              message += `暂无红包雨\n`;
             }
           }
         }
       } catch (e) {
         $.logErr(e, resp)
       } finally {
-        resolve(data);
+        resolve();
       }
     })
   })
 }
 
-function getUserTuanInfo() {
-  let body = {"paramData": {"channel": "FISSION_BEAN"}}
-  return new Promise(resolve => {
-    $.get(taskTuanUrl("distributeBeanActivityInfo", body), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (!data.data.canStartNewAssist)
-              $.tuan = {
-                "activityIdEncrypted": data.data.id,
-                "assistStartRecordId": data.data.assistStartRecordId,
-                "assistedPinEncrypted": data.data.encPin,
-                "channel": "FISSION_BEAN"
-              }
-            $.tuanActId = data.data.id
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-
-function openTuan() {
-  let body = {"activityIdEncrypted": $.tuanActId, "channel": "FISSION_BEAN"}
-  return new Promise(resolve => {
-    $.get(taskTuanUrl("vvipclub_distributeBean_startAssist", body), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data['success']) {
-              $.hasOpen = true
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-
-function getUserInfo() {
-  return new Promise(resolve => {
-    $.get(taskUrl("interactIndex"), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.data.shareTaskRes) {
-              console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${data.data.shareTaskRes.itemId}\n`);
-            } else {
-              console.log(`已满5人助力,暂时看不到您的${$.name}好友助力码`)
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-
-function getTaskList() {
-  return new Promise(resolve => {
-    $.get(taskUrl("interactTaskIndex"), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            $.taskList = data.data.taskDetailResList
-            $.totalNum = data.data.totalNum
-            $.totalBeanNum = data.data.totalBeanNum
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-
-// 完成
-function doTask(body, func = "doInteractTask") {
-  // console.log(taskUrl("doInteractTask", body))
-  return new Promise(resolve => {
-    $.get(taskUrl(func, body), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            // console.log(data)
-            if (func === "doInteractTask") {
-              if (data.subCode === "S000") {
-                console.log(`任务完成，获得 ${data.data.taskDetailResList[0].incomeAmountConf} 金币，${data.data.taskDetailResList[0].beanNum} 京豆`)
-                $.bean += parseInt(data.data.taskDetailResList[0].beanNum)
-              } else {
-                console.log(`任务失败，错误信息：${data.message}`)
-              }
-            } else {
-              console.log(`${data.data.helpResDesc}`)
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-
-async function helpFriends() {
-  for (let code of $.newShareCodes) {
-    if (!code) continue
-    await doTask({"itemId": code, "taskId": "3", "mpVersion": "3.1.0"}, "doHelpTask")
-  }
-}
-function readShareCode() {
-  console.log(`开始`)
-  return new Promise(async resolve => {
-    $.get({url: `https://code.chiang.fun/api/v1/jd/jdzz/read/${randomCount}/`, 'timeout': 10000}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            console.log(`随机取${randomCount}个码放到您固定的互助码后面(不影响已有固定互助)`)
-            data = JSON.parse(data);
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(10000);
-    resolve()
-  })
-}
-//格式化助力码
-function shareCodesFormat() {
-  return new Promise(async resolve => {
-    // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
-    $.newShareCodes = [];
-    if ($.shareCodesArr[$.index - 1]) {
-      $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
-    } else {
-      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
-      const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
-      $.newShareCodes = inviteCodes[tempIndex].split('@');
-    }
-    const readShareCodeRes = await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    }
-    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
-    resolve();
-  })
-}
-
-function requireConfig() {
-  return new Promise(resolve => {
-    console.log(`开始获取${$.name}配置文件\n`);
-    //Node.js用户请在jdCookie.js处填写京东ck;
-    let shareCodes = [];
-    if ($.isNode()) {
-      if (process.env.JDZZ_SHARECODES) {
-        if (process.env.JDZZ_SHARECODES.indexOf('\n') > -1) {
-          shareCodes = process.env.JDZZ_SHARECODES.split('\n');
-        } else {
-          shareCodes = process.env.JDZZ_SHARECODES.split('&');
-        }
-      }
-    }
-    console.log(`共${cookiesArr.length}个京东账号\n`);
-    $.shareCodesArr = [];
-    if ($.isNode()) {
-      Object.keys(shareCodes).forEach((item) => {
-        if (shareCodes[item]) {
-          $.shareCodesArr.push(shareCodes[item])
-        }
-      })
-    }
-    console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
-    resolve()
-  })
-}
-
-function taskUrl(functionId, body = {}) {
+function taskUrl(function_id, body = {}) {
   return {
-    url: `${JD_API_HOST}?functionId=${functionId}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=9.1.0`,
-    headers: {
-      'Cookie': cookie,
-      'Host': 'api.m.jd.com',
-      'Connection': 'keep-alive',
-      'Content-Type': 'application/json',
-      'Referer': 'http://wq.jd.com/wxapp/pages/hd-interaction/index/index',
-      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
-      'Accept-Language': 'zh-cn',
-      'Accept-Encoding': 'gzip, deflate, br',
-    }
-  }
-}
-
-function taskTuanUrl(function_id, body = {}) {
-  return {
-    url: `${JD_API_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&appid=swat_miniprogram&osVersion=5.0.0&clientVersion=3.1.3&fromType=wxapp&timestamp=${new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000}`,
+    url: `${JD_API_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0&_=${new Date().getTime()}`,
     headers: {
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate, br",
@@ -432,20 +208,8 @@ function taskTuanUrl(function_id, body = {}) {
       "Connection": "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
       "Host": "api.m.jd.com",
-      "Referer": "https://servicewechat.com/wxa5bf5ee667d91626/108/page-frame.html",
+      "Referer": "https://h5.m.jd.com/active/redrain/index.html",
       "Cookie": cookie,
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
-    }
-  }
-}
-
-function taskPostUrl(function_id, body = {}) {
-  return {
-    url: `${JD_API_HOST}?functionId=${function_id}`,
-    body: body,
-    headers: {
-      "Cookie": cookie,
-      'Content-Type': 'application/x-www-form-urlencoded',
       "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
     }
   }
@@ -503,14 +267,13 @@ function safeGet(data) {
     return false;
   }
 }
-
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
       console.log(e);
-      $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
+      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
     }
   }
