@@ -68,7 +68,7 @@ $.newShareCodes = ['21d9b4b51a69839577027beb0aad5105', '8edbdfa148e78f028496cff1
     }
   }
   // 帮助作者，把作者助力码放到用户助力码之后
-  await getAuthorShareCode('https://github.com/952714408/updateTeam/raw/master/jd_jdh.json');
+  await getAuthorShareCode('https://gitee.com/shylocks/updateTeam/raw/main/jd_jdh.json');
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];

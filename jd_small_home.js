@@ -151,7 +151,7 @@ async function doChannelsListTask(taskId, taskType) {
 async function helpFriends() {
   await updateInviteCode();
   if (!$.inviteCodes) await updateInviteCodeCDN();
-  if (!$.inviteCodes) await updateInviteCodeCDN('https://raw.githubusercontent.com/952714408/updateTeam/master/jd_updateSmallHomeInviteCode.json');
+  if (!$.inviteCodes) await updateInviteCodeCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateSmallHomeInviteCode.json');
   for (let item of $.inviteCodes.inviteCode) {
     if (!item) continue
     await createAssistUser(item, $.createAssistUserID);
@@ -786,7 +786,7 @@ function login(userName) {
     })
   })
 }
-function updateInviteCode(url = 'https://raw.githubusercontent.com/952714408/updateTeam/master/jd_updateSmallHomeInviteCode.json') {
+function updateInviteCode(url = 'https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_updateSmallHomeInviteCode.json') {
   return new Promise(resolve => {
     $.get({url}, async (err, resp, data) => {
       try {

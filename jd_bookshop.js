@@ -24,18 +24,14 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const ACT_ID = 'dz2010100034444201', shareUuid = '23c495c9110b41febb896f0375fa920d'
+const ACT_ID = 'dz2010100034444201', shareUuid = '28a699ac78d74aa3b31f7103597f8927'
 let ADD_CART = false
 ADD_CART = $.isNode() ? (process.env.PURCHASE_SHOPS ? process.env.PURCHASE_SHOPS : ADD_CART) : ($.getdata("ADD_CART") ? $.getdata("ADD_CART") : ADD_CART);
 // 加入购物车开关，与东东小窝共享
 
 let inviteCodes = [
-  'f24360a348f642ba98e1f1e43fd8b92c@83f26bf55bed4df69ebcdcf6c54543ee@aa63c16d983a4c778053060d66bba56e@c0dbef2e5c214688ab2ba7b301b9db57@ca28c6eaa46842a1b9e93b3ec3bf7ffb',
-  '23c495c9110b41febb896f0375fa920d@83f26bf55bed4df69ebcdcf6c54543ee@aa63c16d983a4c778053060d66bba56e@c0dbef2e5c214688ab2ba7b301b9db57@ca28c6eaa46842a1b9e93b3ec3bf7ffb',
-  '23c495c9110b41febb896f0375fa920d@f24360a348f642ba98e1f1e43fd8b92c@aa63c16d983a4c778053060d66bba56e@c0dbef2e5c214688ab2ba7b301b9db57@ca28c6eaa46842a1b9e93b3ec3bf7ffb',
-  '23c495c9110b41febb896f0375fa920d@f24360a348f642ba98e1f1e43fd8b92c@83f26bf55bed4df69ebcdcf6c54543ee@c0dbef2e5c214688ab2ba7b301b9db57@ca28c6eaa46842a1b9e93b3ec3bf7ffb',
-  '23c495c9110b41febb896f0375fa920d@f24360a348f642ba98e1f1e43fd8b92c@83f26bf55bed4df69ebcdcf6c54543ee@aa63c16d983a4c778053060d66bba56e@ca28c6eaa46842a1b9e93b3ec3bf7ffb',
-  '23c495c9110b41febb896f0375fa920d@f24360a348f642ba98e1f1e43fd8b92c@83f26bf55bed4df69ebcdcf6c54543ee@aa63c16d983a4c778053060d66bba56e@c0dbef2e5c214688ab2ba7b301b9db57'
+  '28a699ac78d74aa3b31f7103597f8927@2f14ee9c92954cf79829320dd482bf49@fdf827db272543d88dbb51a505c2e869@ce2536153a8742fb9e8754a9a7d361da@38ba4e7ba8074b78851e928af2b4f6b2',
+  '28a699ac78d74aa3b31f7103597f8927@2f14ee9c92954cf79829320dd482bf49@fdf827db272543d88dbb51a505c2e869'
 ]
 
 if ($.isNode()) {

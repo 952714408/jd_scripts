@@ -26,15 +26,11 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let helpAuthor = false;
-const randomCount = 0;
+let helpAuthor = true;
+const randomCount = $.isNode() ? 20 : 5;
 const inviteCodes = [
-  `IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa`,
-  `YhIybuuzYvgm-Q@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa`,
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w'
+  `-4msulYas0O2JsRhE-2TA5XZmBQ@eU9Yar_mb_9z92_WmXNG0w@eU9YaO7jMvwh-W_VzyUX0Q`,
+  `-4msulYas0O2JsRhE-2TA5XZmBQ@eU9Yar_mb_9z92_WmXNG0w@eU9YaO7jMvwh-W_VzyUX0Q`
 ]
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -369,7 +365,7 @@ function taskUrl(functionId, body = {}) {
 
 function getAuthorShareCode() {
   return new Promise(resolve => {
-    $.get({url: "https://github.com/952714408/updateTeam/raw/master/jd_cash.json",headers:{
+    $.get({url: "https://gitee.com/shylocks/updateTeam/raw/main/jd_cash.json",headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }}, async (err, resp, data) => {
       $.authorCode = [];

@@ -832,10 +832,10 @@ function getListRank() {
     })
   })
 }
-function updateShareCodes(url = 'https://raw.githubusercontent.com/952714408/updateTeam/master/jd_shareCodes.json') {
+function updateShareCodes(url = 'https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_shareCodes.json') {
   return new Promise(resolve => {
-    //https://cdn.jsdelivr.net/gh/952714408/updateTeam@master/jd_shareCodes.json
-    //https://raw.githubusercontent.com/952714408/updateTeam/master/jd_shareCodes.json
+    //https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_shareCodes.json
+    //https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_shareCodes.json
     $.get({url}, async (err, resp, data) => {
       try {
         if (err) {
@@ -851,10 +851,10 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/952714408/upd
     })
   })
 }
-function updateShareCodesCDN(url = 'https://raw.fastgit.org/952714408/updateTeam/master/jd_shareCodes.json') {
+function updateShareCodesCDN(url = 'https://raw.fastgit.org/LXK9301/updateTeam/master/jd_shareCodes.json') {
   return new Promise(resolve => {
-    //https://cdn.jsdelivr.net/gh/952714408/updateTeam@master/jd_shareCodes.json
-    //https://raw.githubusercontent.com/952714408/updateTeam/master/jd_shareCodes.json
+    //https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_shareCodes.json
+    //https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_shareCodes.json
     $.get({url}, async (err, resp, data) => {
       try {
         if (err) {

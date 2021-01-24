@@ -30,17 +30,15 @@ const JD_API_HOST = 'https://m.jingxi.com';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const randomCount = 0;
+const randomCount = $.isNode() ? 20 : 5;
 let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [
-  'cW11-8mBKHthhO0loX4Dtw==@lMfuzcS-zTzEJ8FYoVs1mA==@sKVh5ztu18HyF_nVmuVlGQ==@DSneV_1zvnFV6Z3SC8MEug==@MBqrIWgfoZPn6eKR-BwIlQ==',
-  '9qVhuxlO7NtZJcgaxtNQaQ==@lMfuzcS-zTzEJ8FYoVs1mA==@sKVh5ztu18HyF_nVmuVlGQ==@DSneV_1zvnFV6Z3SC8MEug==@MBqrIWgfoZPn6eKR-BwIlQ==',
-  '9qVhuxlO7NtZJcgaxtNQaQ==@cW11-8mBKHthhO0loX4Dtw==@sKVh5ztu18HyF_nVmuVlGQ==@DSneV_1zvnFV6Z3SC8MEug==@MBqrIWgfoZPn6eKR-BwIlQ==',
-  '9qVhuxlO7NtZJcgaxtNQaQ==@cW11-8mBKHthhO0loX4Dtw==@lMfuzcS-zTzEJ8FYoVs1mA==@DSneV_1zvnFV6Z3SC8MEug==@MBqrIWgfoZPn6eKR-BwIlQ==',
-  '9qVhuxlO7NtZJcgaxtNQaQ==@cW11-8mBKHthhO0loX4Dtw==@lMfuzcS-zTzEJ8FYoVs1mA==@sKVh5ztu18HyF_nVmuVlGQ==@MBqrIWgfoZPn6eKR-BwIlQ==',
-  '9qVhuxlO7NtZJcgaxtNQaQ==@cW11-8mBKHthhO0loX4Dtw==@lMfuzcS-zTzEJ8FYoVs1mA==@sKVh5ztu18HyF_nVmuVlGQ==@DSneV_1zvnFV6Z3SC8MEug=='
+  'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=@0WtCMPNq7jekehT6d3AbFw==',
+  "gB99tYLjvPcEFloDgamoBw==",
+  '-OvElMzqeyeGBWazWYjI1Q==',
+  'GFwo6PntxDHH95ZRzZ5uAg=='
 ];
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 $.tuanIds = [];
@@ -1052,7 +1050,7 @@ async function joinLeaderTuan() {
     }
   }
   $.tuanIdS = null;
-  if (!$.tuanIdS) await updateTuanIdsCDN('https://github.com/952714408/updateTeam/raw/master/jd_updateFactoryTuanId.json');
+  if (!$.tuanIdS) await updateTuanIdsCDN('https://gitee.com/shylocks/updateTeam/raw/main/jd_updateFactoryTuanId.json');
   if ($.tuanIdS && $.tuanIdS.tuanIds) {
     for (let tuanId of $.tuanIdS.tuanIds) {
       if (!tuanId) continue
@@ -1211,7 +1209,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
     })
   })
 }
-function updateTuanIds(url = 'https://raw.githubusercontent.com/952714408/updateTeam/master/jd_updateFactoryTuanId.json') {
+function updateTuanIds(url = 'https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_updateFactoryTuanId.json') {
   return new Promise(resolve => {
     $.get({url}, (err, resp, data) => {
       try {
@@ -1368,9 +1366,9 @@ function shareCodesFormat() {
 }
 function requireConfig() {
   return new Promise(async resolve => {
-    await updateTuanIdsCDN('https://raw.githubusercontent.com/952714408/updateTeam/master/jd_updateFactoryTuanId.json');
+    await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
     if (!$.tuanIdS) await updateTuanIds();
-    if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/952714408/updateTeam@master/jd_updateFactoryTuanId.json');
+    if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_updateFactoryTuanId.json');
     if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
       tuanActiveId = $.tuanIdS.tuanActiveId;
     }
