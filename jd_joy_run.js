@@ -46,18 +46,18 @@ const $ = new Env('宠汪汪赛跑');
 const JD_BASE_API = `https://draw.jdfcloud.com//pet`;
 //此处填入你需要助力好友的京东用户名
 //下面给出好友邀请助力的示例填写规则
-let invite_pins = ["jd_6cd93e613b0e5,被折叠的记忆33,jd_704a2e5e28a66,jd_45a6b5953b15b,zooooo58,jd_66f5cecc1efcd,jd_41345a6f96aa5,jd_sIhNpDXJehOr,jd_mCbhXxmqzYJC"];
+let invite_pins = ["q952714408,18925661629_p,jd_7da8f66606f37,服装之家,jd_zBTbBgCsQxfy,jd_CICkvlgkhImS"];
 //下面给出好友赛跑助力的示例填写规则
-let run_pins = ["被折叠的记忆33,jd_6cd93e613b0e5,jd_45a6b5953b15b,jd_66f5cecc1efcd,jd_sIhNpDXJehOr,jd_41345a6f96aa5,jd_704a2e5e28a66,zooooo58,jd_5851f32d4a083,jd_mCbhXxmqzYJC,wddpzLSxORvLGo"];
+let run_pins = ["q952714408,18925661629_p,jd_7da8f66606f37,服装之家,jd_zBTbBgCsQxfy,jd_CICkvlgkhImS"];
 let temp = run_pins[0].split(',')
-let fixPins = temp.splice(temp.indexOf('jd_6cd93e613b0e5'), 1);
-fixPins.push(...temp.splice(temp.indexOf('被折叠的记忆33'), 1));
+let fixPins = temp.splice(temp.indexOf('q952714408'), 1);
+fixPins.push(...temp.splice(temp.indexOf('18925661629_p'), 1));
 const randomPins = getRandomArrayElements(temp, 4);
 temp = [...fixPins, ...randomPins];
 run_pins = [temp.join(',')];
 // $.LKYLToken = '76fe7794c475c18711e3b47185f114b5' || $.getdata('jdJoyRunToken');
 // $.LKYLToken = $.getdata('jdJoyRunToken');
-let friendsArr = ["jd_6cd93e613b0e5", "被折叠的记忆33", "jd_704a2e5e28a66", "jd_45a6b5953b15b", "zooooo58", "jd_66f5cecc1efcd", "jd_41345a6f96aa5"]
+let friendsArr = ["q952714408", "18925661629_p", "jd_7da8f66606f37", "服装之家", "jd_zBTbBgCsQxfy", "jd_CICkvlgkhImS", "jd_41345a6f96aa5"]
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie

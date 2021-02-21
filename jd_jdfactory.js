@@ -49,7 +49,14 @@ if ($.isNode()) {
 }
 let wantProduct = ``;//心仪商品名称
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const inviteCodes = [`P04z54XCjVWnYaS5u2ak7ZCdan1Bdd2GGiWvC6_uERj`, 'P04z54XCjVWnYaS5m9cZ2ariXVJwHf0bgkG7Uo'];
+const inviteCodes = [
+"P04z54XCjVWnYaS5jQAAWL923pLk_keYmU@P04z54XCjVWnYaS5m9cZ2esjHQck5ruSf3moD0@P04z54XCjVWnYaS5uOktbhraKjDLq9GGw",
+"P04z54XCjVWnYaS5nQBDWL_3HhOlWI@P04z54XCjVWnYaS5m9cZ2esjHQck5ruSf3moD0@P04z54XCjVWnYaS5uOktbhraKjDLq9GGw",
+"P04z54XCjVWnYaS5nQBDWL_3HhOlWI@P04z54XCjVWnYaS5jQAAWL923pLk_keYmU@P04z54XCjVWnYaS5uOktbhraKjDLq9GGw",
+"P04z54XCjVWnYaS5nQBDWL_3HhOlWI@P04z54XCjVWnYaS5jQAAWL923pLk_keYmU@P04z54XCjVWnYaS5m9cZ2esjHQck5ruSf3moD0",
+"P04z54XCjVWnYaS5nQBDWL_3HhOlWI@P04z54XCjVWnYaS5jQAAWL923pLk_keYmU@P04z54XCjVWnYaS5m9cZ2esjHQck5ruSf3moD0@P04z54XCjVWnYaS5uOktbhraKjDLq9GGw",
+"P04z54XCjVWnYaS5nQBDWL_3HhOlWI@P04z54XCjVWnYaS5jQAAWL923pLk_keYmU@P04z54XCjVWnYaS5m9cZ2esjHQck5ruSf3moD0@P04z54XCjVWnYaS5uOktbhraKjDLq9GGw"
+];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
