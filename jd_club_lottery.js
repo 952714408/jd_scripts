@@ -5,7 +5,7 @@
 * @Last Modified time: 2020-11-23 12:27:09
 */
 /*
-摇京豆(京东APP首页-领京豆-摇京豆)
+活动入口：京东APP首页-领京豆-摇京豆
 更新时间:2020-10-12
 Modified from https://github.com/Zero-S1/JD_tools/blob/master/JD_vvipclub.py
 已支持IOS双京东账号,Node.js支持N个京东账号
@@ -13,16 +13,16 @@ Modified from https://github.com/Zero-S1/JD_tools/blob/master/JD_vvipclub.py
 ============QuantumultX==============
 [task_local]
 #摇京豆
-5 0 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_club_lottery.js, tag=摇京豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
+5 0 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_club_lottery.js, tag=摇京豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
 =================Loon===============
 [Script]
-cron "5 0 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_club_lottery.js,tag=摇京豆
+cron "5 0 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_club_lottery.js,tag=摇京豆
 =================Surge==============
 [Script]
-摇京豆 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_club_lottery.js
+摇京豆 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_club_lottery.js
 
 ============小火箭=========
-摇京豆 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_club_lottery.js, cronexpr="5 0 * * *", timeout=3600, enable=true
+摇京豆 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_club_lottery.js, cronexpr="5 0 * * *", timeout=3600, enable=true
 */
 
 const $ = new Env('摇京豆');
@@ -38,13 +38,7 @@ if ($.isNode()) {
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {

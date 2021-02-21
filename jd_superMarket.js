@@ -9,19 +9,19 @@
 活动入口：京东APP首页-京东超市-底部东东超市
 Some Functions Modified From https://github.com/Zero-S1/JD_tools/blob/master/JD_superMarket.py
 支持京东双账号
-东东超市兑换奖品请使用此脚本 https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js
+东东超市兑换奖品请使用此脚本 https://jdsharedresourcescdn.azureedge.net/jdresource/jd_blueCoin.js
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 =================QuantumultX==============
 [task_local]
 #东东超市
-11 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js, tag=东东超市, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=true
+11 * * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_superMarket.js, tag=东东超市, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=true
 ===========Loon===============
 [Script]
-cron "11 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js,tag=东东超市
+cron "11 * * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_superMarket.js,tag=东东超市
 =======Surge===========
-东东超市 = type=cron,cronexp="11 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js
+东东超市 = type=cron,cronexp="11 * * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_superMarket.js
 ==============小火箭=============
-东东超市 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js, cronexpr="11 * * * *", timeout=3600, enable=true
+东东超市 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_superMarket.js, cronexpr="11 * * * *", timeout=3600, enable=true
  */
 const $ = new Env('东东超市');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -32,7 +32,7 @@ let jdNotify = true;//用来是否关闭弹窗通知，true表示关闭，false�
 let superMarketUpgrade = true;//自动升级,顺序:解锁升级商品、升级货架,true表示自动升级,false表示关闭自动升级
 let businessCircleJump = true;//小于对方300热力值自动更换商圈队伍,true表示运行,false表示禁止
 let drawLotteryFlag = false;//是否用500蓝币去抽奖，true表示开启，false表示关闭。默认关闭
-let joinPkTeam = false;//是否自动加入PK队伍
+let joinPkTeam = true;//是否自动加入PK队伍
 let message = '', subTitle;
 const JD_API_HOST = 'https://api.m.jd.com/api';
 
@@ -41,13 +41,9 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
   //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
+  '-4msulYas0O2JsRhE-2TA5XZmBQ@eU9Yar_mb_9z92_WmXNG0w@eU9YaejjYv4g8T2EwnsVhQ',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'YhIybuuzYvgm-Q@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w'
+  'aURoM7PtY_Q@eU9Ya-y2N_5z9DvXwyIV0A@eU9YaOnjYK4j-GvWmXIWhA',
 ]
 
 !(async () => {
@@ -91,7 +87,7 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
       $.done();
     })
 async function jdSuperMarket() {
-  // await receiveGoldCoin();//收金币
+  await receiveGoldCoin();//收金币
   await businessCircleActivity();//商圈活动
   await receiveBlueCoin();//收蓝币（小费）
   // await receiveLimitProductBlueCoin();//收限时商品的蓝币
@@ -325,9 +321,7 @@ async function businessCircleActivity() {
       if (joinPkTeam === 'true') {
         await getTeam();
         console.log(`\n注：PK会在每天的七点自动随机加入LXK9301创建的队伍\n`)
-        await updatePkActivityId();
-        if (!$.updatePkActivityIdRes) await updatePkActivityIdCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateTeam.json');
-        if (!$.updatePkActivityIdRes) await updatePkActivityIdCDN('https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_updateTeam.json');
+        await updatePkActivityIdCDN('https://gitee.com/lxk0301/updateTeam/raw/master/shareCodes/jd_updateTeam.json');
         console.log(`\nupdatePkActivityId[pkActivityId]:::${$.updatePkActivityIdRes.pkActivityId}`);
         console.log(`\n京东服务器返回的[pkActivityId] ${pkActivityId}`);
         if ($.updatePkActivityIdRes && ($.updatePkActivityIdRes.pkActivityId === pkActivityId)) {
@@ -1515,13 +1509,7 @@ function requireConfig() {
       })
       if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
     } else {
-      let cookiesData = $.getdata('CookiesJD') || "[]";
-      cookiesData = jsonParse(cookiesData);
-      cookiesArr = cookiesData.map(item => item.cookie);
-      cookiesArr.reverse();
-      cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-      cookiesArr.reverse();
-      cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+      cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
     }
     console.log(`共${cookiesArr.length}个京东账号\n`);
     // console.log(`东东超市已改版,目前暂不用助力, 故无助力码`)

@@ -7,17 +7,17 @@
 ============Quantumultx===============
 [task_local]
 #签到领现金
-2 0 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_cash.js, tag=签到领现金, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+2 0 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_cash.js, tag=签到领现金, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "2 0 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_cash.js,tag=签到领现金
+cron "2 0 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_cash.js,tag=签到领现金
 
 ===============Surge=================
-签到领现金 = type=cron,cronexp="2 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_cash.js
+签到领现金 = type=cron,cronexp="2 0 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_cash.js
 
 ============小火箭=========
-签到领现金 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_cash.js, cronexpr="2 0 * * *", timeout=3600, enable=true
+签到领现金 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_cash.js, cronexpr="2 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('签到领现金');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -26,15 +26,11 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let helpAuthor = false;
-const randomCount = 0;
+let helpAuthor = true;
+const randomCount = $.isNode() ? 20 : 5;
 const inviteCodes = [
-  `IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa`,
-  `YhIybuuzYvgm-Q@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa`,
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@eU9YH5XBPbp6pjWNsi5w@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YJp7WNI5xgi20gyVa',
-  'YhIybuuzYvgm-Q@IhM-bum0YP0g82e6iw@eU9Ya7jjbqog92jVzSUQ0Q@9beKtH8HsnWdJPBT@eU9YH5XBPbp6pjWNsi5w'
+  `YFjh6Vll-l3zb9cCf_U@aURoM7PtY_Q@eU9YL5XqGLxSmRSAkwxR@eU9YaO7jMvwh-W_VzyUX0Q@eU9YaurkY69zoj3UniVAgg@eU9YaOnjYK4j-GvWmXIWhA@eU9YMZ_gPpRurC-foglg`,
+  `-4msulYas0O2JsRhE-2TA5XZmBQ@eU9Yar_mb_9z92_WmXNG0w@eU9YaO7jMvwh-W_VzyUX0Q@eU9YaurkY69zoj3UniVAgg@eU9YaOnjYK4j-GvWmXIWhA`
 ]
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -42,13 +38,7 @@ if ($.isNode()) {
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {
@@ -91,7 +81,7 @@ async function jdCash() {
   await shareCodesFormat()
   await helpFriends()
   await index(true)
-  // await getReward()
+  await getReward()
   await showMsg()
 }
 function index(info=false) {
@@ -369,7 +359,7 @@ function taskUrl(functionId, body = {}) {
 
 function getAuthorShareCode() {
   return new Promise(resolve => {
-    $.get({url: "https://github.com/952714408/updateTeam/raw/master/jd_cash.json",headers:{
+    $.get({url: "https://gitee.com/shylocks/updateTeam/raw/main/jd_cash.json",headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }}, async (err, resp, data) => {
       $.authorCode = [];
